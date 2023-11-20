@@ -15,6 +15,8 @@ done
 echo The number of unique fasta IDs is:
 sort fastaIDs | uniq | wc -l
 
+rm fastaIDs
+
 #for each file
 echo Characteristics of each file: 
 for file in $fastafiles;
@@ -25,5 +27,7 @@ if [[ -h $file ]]; then
 	echo The file is NOT a symlink 
 fi
 echo The number of sequences it contains is: 
-awk '$1~/>/{print NR}' $file | wc -l
+awk '$1~/>/' $file | wc -l
+echo The number of amino acids or nucleotides in the file is:
+awk '!($1~/>/)' $file | tr -d '\n' | wc -c #check because it's not completely correct
 done
