@@ -31,15 +31,18 @@ if [[ -h $file ]]; then
 fi 
 
 #determine the number of sequences
-header=$header$'\t'"| "Num_Sequences:$(awk '$1~/>/' $file | wc -l)
 
-#determine 
+if [[ $(grep ">" $file | wc -l) -eq 0 ]]; then header=$header$'\t'"| ""It is not a current file, it is a binary file"; echo $header; echo ""; continue; 
+else header=$header$'\t'"| "Num_Sequences:$(awk '$1~/>/' $file | wc -l); fi
+
+#determine the total sequences length
 header=$header$'\t'"| "Total_Length:$(awk '!($1~/>/)' $file | tr -d '\n' | sed 's/-//g' | wc -c)
 
-#detemrine if hte file is nucleotide or amino acid
-#if [[ $(awk '!($1~/>/)' $file)==[A,G,T,C] ]]; then header=$header$'\t'"| "Nucleotide
-#else header=$header$'\t'"| "Amino_acid
-#fi
+#detemrine if the file is nucleotide or amino acid
+if [[ $(awk '!($1~/>/)' $file)==[A,G,T,C] ]]; then header=$header$'\t'"| "Nucleotide
+else header=$header$'\t'"| "Amino_acid
+fi
+
 echo $header
 echo "" #empty line to facilitate visualization
 done
