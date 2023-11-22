@@ -43,8 +43,8 @@ if [[ ! -r $file ]]; then echo $header THIS FILE IS NOT READABLE, it will be 	sk
 	else header=$header$'\t'"| "Num_Sequences:$(awk '$1~/>/' $file | wc -l); fi
 
 	#determine the total sequences length
-	header=$header$'\t'"| "Total_Length:$(awk '!($1~/>/)' $file | tr -d '\n' | sed 's/-//g' | wc -c)
-
+	header=$header$'\t'"| "Total_Length:$(awk '!($1~/>/)' $file | grep -io [A-Z] | wc -l )
+	
 	#determine if the file has nucleotides or amino acids
 	if [[ $(awk '!($1~/>/)' $file | grep -io [QWERTYIPASDFGHKLCVNM] | wc -l ) -gt $(awk '!($1~/>/)' $file | grep -io  [ACTGNU] | wc -l ) ]]; then header=$header$'\t'"| "Amino_Acid
 	else header=$header$'\t'"| "Nucleotide
